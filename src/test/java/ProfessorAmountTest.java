@@ -38,7 +38,9 @@ class ProfessorAmountTest {
        bookInfo2.setBookauthor("Author 2");
        EBook book2 = new EBook(bookInfo2);
        
-       series = new BookSeries("Test Series", Arrays.asList(book1, book2));
+       series = new BookSeries("Test Series");
+       series.add(book1);
+       series.add(book2);
    }
    
    @Test
@@ -77,4 +79,19 @@ class ProfessorAmountTest {
        double expectedFine = (50-35)*5.0 + (50-40)*5.0;
        assertEquals(expectedFine, calculator.calculate(series, borrow), 0.01);
    }
+
+    @Test
+    void testNullBook() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            calculator.calculate(null, borrow);
+        });
+        assertEquals("Book and borrow cannot be null.", exception.getMessage());
+    }
+
+    @Test
+    void testEmptyBookSeries() {
+        BookSeries emptySeries = new BookSeries("Empty Series");
+        assertEquals(0.0, calculator.calculate(emptySeries, borrow), 0.01);
+    }
+
 }
